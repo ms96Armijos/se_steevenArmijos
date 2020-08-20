@@ -1,0 +1,71 @@
+
+programa:-proyecto_se,repeat, abolish(si_no/2),
+%Informa al intérprete de que la definición de predicate(s)puede cambiar durante la ejecución (usando aserr / 1 y / o retraer / 1 ).
+    dynamic(si_no/2),
+    diagnosticomedico,nl,nl,
+    write('Intentarlo de nuevo ? (s/n)'),read(Respuesta),\+ Respuesta=s,nl,
+    %Verdadero si no se puede probar el 'objetivo' + se refiere a demostrable y la barra invertida ( \) se utiliza normalmente para indicar negación en Prolog).
+    abolish(si_no,2).
+
+
+
+proyecto_se:-nl,nl,
+write('Sistema Experto para ayudar a determinar qué enfermedad pone en riesgo de terminar en quirófano a un paciente según sus síntomas.'),nl,
+write('_________________________________________________________________________________________________________________________________'),nl.
+
+
+diagnosticomedico:-write(''),nl,
+                   enfermedad(Enfermedad),!,nl,
+                   write('||||||||||||||||CUADRO CLÍNICO||||||||||||||||'),nl,nl,
+                   write('Según sus síntomas, es muy probable que Ud., corra el riesgo de terminar en el quirófano por: '),nl,nl,
+                   write('                  '), write(Enfermedad),nl,nl,
+                   write('||||||||||||||||||||||||||||||||||||||||||||||').
+
+diagnosticomedico:-nl,write('||||||||||||||||CUADRO CLÍNICO||||||||||||||||'),nl,nl,
+                   write('Los síntomas que presenta, puede que se deba a otra enfermedad distinta'),nl,nl,
+                   write('||||||||||||||||||||||||||||||||||||||||||||||').
+
+sintoma_principal_calculo_renal:-sintoma('¿Tiene dolor fuerte que se origina a la altura del riñón o de las vías urinarias?'),!.
+sintoma_principal_calculo_biliar:-sintoma('¿Tiene dolor intenso que se localiza en la parte superior derecha y media del abdomen?'),!.
+sintoma_principal_apendicitis:- sintoma('¿Siente un dolor repentino que se desplaza hacia la parte inferior derecha del abdomen?'),!.
+
+
+optional:-sintoma('¿Su orina es de color rosa, rojo o marrón?').
+optional:- sintoma('¿Su orina tiene un olor desagradable?').
+optional:-sintoma('Cuando va a orinar ¿orina en pequeñas cantidades?').
+
+
+enfermedad(calculos_renales):-
+                   sintoma_principal_calculo_renal,
+                   sintoma('¿Tiene sensación de una necesidad intensa de orinar?'),
+                   sintoma('¿Tiene náuseas y vómitos?'),
+                   optional;
+                   sintoma('¿Siente sensación de quemazón al orinar?'),
+                   (sintoma('¿Tiene fiebre')).
+
+                  % (sintoma('¿Su orina es de color rosa, rojo o marrón?'); sintoma('¿Su orina tiene un olor desagradable?')),
+                  %(sintoma('Cuando va a orinar ¿orina en pequeñas cantidades?');sintoma('¿Siente sensación de quemazón al orinar?')).
+
+
+enfermedad(calculos_biliares):-
+                   sintoma_principal_calculo_biliar,
+                   sintoma('¿Siente dolor de espalda justo entre las escápulas (omóplatos)?'),%opcional
+                   sintoma('¿Siente dolor en el hombro derecho?'),
+                   sintoma('¿Tiene náuseas y vómitos?'),
+                   sintoma('¿Tiene color amarillento en la piel o en el blanco de los ojos?'),
+                   sintoma('¿Tiene fiebre?'),
+                   sintoma('¿Orina de color de té y sus heces son de color claro?').
+
+enfermedad(apendicitis):-
+                   sintoma_principal_apendicitis,
+                   sintoma('¿El dolor empeora cuando realiza movimientos bruscos?'),
+                   sintoma('¿Siente pérdida de apetito?'),
+
+                   (sintoma('¿Tiene náuseas y vómitos?');sintoma('¿Tiene estreñimiento o diarrea?')),
+                   (sintoma('¿Tiene fiebre?');sintoma('¿Siente hinchazón abdominal?')).
+
+
+sintoma(Sintoma):-nl,write(Sintoma ),write(' (s/n)'),
+                  nl, read(Respuesta),
+                  ((Respuesta=s, assert(si_no(Sintoma, true)));
+                  (assert(si_no(Sintoma, false)),fail)).
