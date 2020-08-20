@@ -2,7 +2,7 @@
 programa:-proyecto_se,repeat, abolish(si_no/2),
     dynamic(si_no/2),
     diagnosticomedico,nl,nl,
-    write('Intentarlo de nuevo ? (s/n)'),read(Respuesta),\+ Respuesta=s,nl,
+    write('¿Desea volver a intentarlo? (s/n)'),read(Respuesta),\+ Respuesta=s,nl,
     %Verdadero si no se puede probar el 'objetivo' + se refiere a demostrable y la barra invertida ( \) se utiliza normalmente para indicar negación en Prolog).
     abolish(si_no,2).
 
@@ -14,11 +14,6 @@ write('_________________________________________________________________________
 sintoma_principal_calculo_renal:-sintoma('¿Tiene dolor fuerte que se origina a la altura del riñón o de las vías urinarias?'),!.
 sintoma_principal_calculo_biliar:-sintoma('¿Tiene dolor intenso que se localiza en la parte superior derecha y media del abdomen?'),!.
 sintoma_principal_apendicitis:- sintoma('¿Siente un dolor repentino que se desplaza hacia la parte inferior derecha del abdomen?'),!.
-
-%Síntomas que pueden o no presentarse en los cálculos renales
-opcional_renal:-sintoma('¿Su orina es de color rosa, rojo o marrón?').
-opcional_renal:- sintoma('¿Su orina tiene un olor desagradable?').
-opcional_renal:-sintoma('Cuando va a orinar ¿orina en pequeñas cantidades?').
 
 
 enfermedad(calculos_renales):-

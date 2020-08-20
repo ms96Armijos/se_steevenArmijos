@@ -39,12 +39,12 @@ enfermedad(calculos_biliares):-
    sintoma('¿Orina de color de té y sus heces son de color claro?').
 
 enfermedad(apendicitis):-
-                   sintoma_principal_apendicitis,
-                   sintoma('¿El dolor empeora cuando realiza movimientos bruscos?'),
-                   sintoma('¿Siente pérdida de apetito?'),
+   sintoma_principal_apendicitis,
+   sintoma('¿El dolor empeora cuando realiza movimientos bruscos?'),
+   sintoma('¿Siente pérdida de apetito?'),
 
-                   (sintoma('¿Tiene náuseas y vómitos?');sintoma('¿Tiene estreñimiento o diarrea?')),
-                   (sintoma('¿Tiene fiebre?');sintoma('¿Siente hinchazón abdominal?')).
+   (sintoma('¿Tiene náuseas y vómitos?');sintoma('¿Tiene estreñimiento o diarrea?')),
+   (sintoma('¿Tiene fiebre?');sintoma('¿Siente hinchazón abdominal?')).
 
 
 sintoma(Sintoma):-nl,write(Sintoma ),nl,write(' (s/n)'),
