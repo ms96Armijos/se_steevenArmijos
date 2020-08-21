@@ -1,21 +1,20 @@
-%abolish Elimina todas las cláusulas de un predicado
 programa:-proyecto_se,repeat, abolish(si_no/2),
     dynamic(si_no/2),
     diagnosticomedico,nl,nl,
     write('¿Desea volver a intentarlo? (s/n)'),read(Respuesta),\+ Respuesta=s,nl,
-    %Verdadero si no se puede probar el 'objetivo' + se refiere a demostrable y la barra invertida ( \) se utiliza normalmente para indicar negación en Prolog).
     abolish(si_no,2).
 
+%Encabezado para el programa donde se muestra el título del SE
 proyecto_se:-nl,nl,
 write('Sistema Experto para ayudar a determinar qué enfermedad pone en riesgo de terminar en quirófano a un paciente según sus síntomas.'),nl,
 write('_________________________________________________________________________________________________________________________________'),nl.
 
-
+%Según la bibliografía estos son los síntomas que determinan a qué enfermedad de puede derivar
 sintoma_principal_calculo_renal:-sintoma('¿Tiene dolor fuerte que se origina a la altura del riñón o de las vías urinarias?'),!.
 sintoma_principal_calculo_biliar:-sintoma('¿Tiene dolor intenso que se localiza en la parte superior derecha y media del abdomen?'),!.
 sintoma_principal_apendicitis:- sintoma('¿Siente un dolor repentino que se desplaza hacia la parte inferior derecha del abdomen?'),!.
 
-
+%Con esta regla se identifica si el paciente puede tener o no cálculos renales.
 enfermedad(calculos_renales):-
    sintoma_principal_calculo_renal,
    sintoma('¿Tiene sensación de una necesidad intensa de orinar?'),
@@ -24,6 +23,7 @@ enfermedad(calculos_renales):-
    (sintoma('¿Su orina es de color rosa, rojo o marrón?'); sintoma('¿Su orina tiene un olor desagradable?')),
    (sintoma('Cuando va a orinar ¿orina en pequeñas cantidades?');sintoma('¿Siente sensación de quemazón al orinar?')).
 
+%Con esta regla se identifica si el paciente puede tener o no cálculos biliares.
 enfermedad(calculos_biliares):-
    sintoma_principal_calculo_biliar,
    sintoma('¿Siente dolor de espalda justo entre las escápulas (omóplatos)?'),
@@ -33,6 +33,7 @@ enfermedad(calculos_biliares):-
    sintoma('¿Tiene fiebre?'),
    sintoma('¿Orina de color de té y sus heces son de color claro?').
 
+%Con esta regla se identifica si el paciente puede tener o no apendicitis.
 enfermedad(apendicitis):-
    sintoma_principal_apendicitis,
    sintoma('¿El dolor empeora cuando realiza movimientos bruscos?'),
@@ -41,13 +42,17 @@ enfermedad(apendicitis):-
    (sintoma('¿Tiene náuseas y vómitos?');sintoma('¿Tiene estreñimiento o diarrea?')),
    (sintoma('¿Tiene fiebre?');sintoma('¿Siente hinchazón abdominal?')).
 
-
+% Con esta regla simplemente obtengo las respuestas a las preguntas de
+% forma dinámica con la ayuda de dynamic que se define en la regla
+% principal
 sintoma(Sintoma):-nl,write(Sintoma ),nl,write(' (s/n)'),
                   nl, read(Respuesta),
                   ((Respuesta=s, assert(si_no(Sintoma, true)));
                   (assert(si_no(Sintoma, false)),fail)).
 
-
+% Esta regla es la que se llama al iniciar el programa, en caso de no
+% obtener un resultado positivo se pasa a la siguiente regla con el
+% mismo nombre: diagnosticomedico
 diagnosticomedico:-write(''),nl,
                    enfermedad(Enfermedad),!,nl,
                    write('||||||||||||||||CUADRO CLÍNICO||||||||||||||||'),nl,nl,
